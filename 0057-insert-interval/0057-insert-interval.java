@@ -1,30 +1,42 @@
 class Solution {
     public int[][] insert(int[][] intervals, int[] newInterval) {
-        Comparator<int[]> c = (a, b) -> Integer.compare(a[0], b[0]);
-        Queue<int[]> pq = new PriorityQueue<>(c);
+        Queue<int[]> ll = new LinkedList<>();
+        boolean inserted = false;
         for (int[] interval : intervals) {
-            pq.add(interval);
+            boolean canInsert = !inserted && newInterval[0] <= interval[0];
+            if (canInsert) {
+                inserted = true;
+                ll.add(newInterval);
+            } 
+            ll.add(interval);
         }
-        pq.add(newInterval);
 
-        int[] prev = pq.poll();
-        List<int[]> merged = new LinkedList<>();
-        while (!pq.isEmpty()) {
-            int[] curr = pq.poll();
+        if (!inserted) {
+            ll.add(newInterval);
+        }
 
-            if (prev[0] <= curr[0] && curr[0] <= prev[1]) {
-                prev[1] = Math.max(prev[1], curr[1]);
+        if (ll.isEmpty()) {
+            return new int[][]{newInterval};
+        }
+        int[] prev = ll.poll();
+
+        List<int[]> resList = new LinkedList<>();
+        while (!ll.isEmpty()) {
+            int[] curr = ll.poll();
+
+            if (curr[0] >= prev[0] && curr[0] <= prev[1]) {
+                prev[1] = Math.max(curr[1], prev[1]);
             } else {
-                merged.add(prev);
+                resList.add(prev);
                 prev = curr;
             }
         }
-        merged.add(prev);
+        resList.add(prev);
 
-        int[][] res = new int[merged.size()][2];
+        int[][] res = new int[resList.size()][2];
         int i = 0;
-        for (int[] interval : merged) {
-            res[i] = interval;
+        for (int[] l : resList) {
+            res[i] = l;
             i++;
         }
         return res;
