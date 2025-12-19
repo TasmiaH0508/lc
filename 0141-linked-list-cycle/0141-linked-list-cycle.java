@@ -10,17 +10,16 @@
  * }
  */
 public class Solution {
-
-    Set<ListNode> visited = new HashSet<>();
-
     public boolean hasCycle(ListNode head) {
-        if (head == null) {
-            return false;
+        Set<ListNode> seen = new HashSet<>();
+        ListNode ptr = head;
+        while (ptr != null) {
+            if (seen.contains(ptr)) {
+                return true;
+            }
+            seen.add(ptr);
+            ptr = ptr.next;
         }
-        if (visited.contains(head)) {
-            return true;
-        }
-        visited.add(head);
-        return hasCycle(head.next);
+        return false;
     }
 }
