@@ -10,24 +10,40 @@
  */
 class Solution {
     public ListNode mergeKLists(ListNode[] lists) {
-        int minVal = Integer.MAX_VALUE;
-        int indexOfList = -1;
+        Comparator<int[]> c = (a, b) -> Integer.compare(a[0], b[0]);
+        Queue<int[]> pq = new PriorityQueue<>(c);
         for (int i = 0; i < lists.length; i++) {
             if (lists[i] != null) {
-                int val = lists[i].val;
-                if (val < minVal) {
-                    minVal = val;
-                    indexOfList = i;
-                }
+                int[] arr = new int[]{lists[i].val, i};
+                pq.add(arr);
             }
         }
 
-        if (indexOfList == -1) {
+        if (pq.isEmpty()) {
             return null;
         }
 
-        lists[indexOfList] = lists[indexOfList].next;
-        ListNode res = new ListNode(minVal, mergeKLists(lists));
+        ListNode res = new ListNode();
+        ListNode ptr = res;
+        while (!pq.isEmpty()) {
+            int[] curr = pq.poll();
+            int val = curr[0];
+            int index = curr[1];
+            ptr.val = val;
+
+            lists[index] = lists[index].next;
+            if (lists[index] != null) {
+                int[] arr = new int[]{lists[index].val, index};
+                pq.add(arr);
+            }
+
+            if (!pq.isEmpty()) {
+                ptr.next = new ListNode();
+                ptr = ptr.next;
+            } 
+        }
+        ptr = null;
+
         return res;
     }
 }
