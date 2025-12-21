@@ -17,7 +17,7 @@ class Solution {
             if (isPunc) {
                 String word = sb.toString().toLowerCase();
                 sb = new StringBuilder();
-                if (!bannedWords.contains(word)) {
+                if (!bannedWords.contains(word) && word.length() > 0) {
                     int f = freq.getOrDefault(word, 0) + 1;
                     freq.put(word, f);
                     if (f > maxFreq) {
@@ -34,6 +34,8 @@ class Solution {
             String word = sb.toString().toLowerCase();
             if (!bannedWords.contains(word)) {
                 int f = freq.getOrDefault(word, 0) + 1;
+                System.out.println(f);
+                System.out.println(maxFreq);
                 if (f > maxFreq) {
                     res = word;
                 }
