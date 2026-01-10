@@ -4,28 +4,23 @@ class Solution {
             return false;
         }
 
-        Queue<Integer> ll = new LinkedList<>();
+        Deque<Integer> ll = new ArrayDeque<>();
         while (x > 0) {
             int n = x % 10;
-            ll.add(n);
+            ll.addLast(n);
             x /= 10;
         }
 
-        int[] arr = new int[ll.size()];
-        int i = 0;
-        for (int l : ll) {
-            arr[i] = l;
-            i++;
-        }
+        while (ll.size() > 0) {
+            int front = ll.pollFirst();
+            int back = front;
+            if (ll.size() > 0) {
+                back = ll.pollLast();
+            }
 
-        int low = 0;
-        int high = arr.length - 1;
-        while (low < high) {
-            if (arr[low] != arr[high]) {
+            if (front != back) {
                 return false;
             }
-            low++;
-            high--;
         }
         return true;
     }
