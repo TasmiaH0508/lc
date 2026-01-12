@@ -1,36 +1,22 @@
 class Solution {
     public int subarraySum(int[] nums, int k) {
-        int[] prefSum = new int[nums.length];
-        Map<Integer, List<Integer>> map = new HashMap<>();
-        for (int i = 0; i < nums.length; i++) {
-            prefSum[i] = nums[i];
-            if (i > 0) {
-                prefSum[i] += prefSum[i - 1];
-            }
-
-            List<Integer> q = map.getOrDefault(prefSum[i], new LinkedList<>());
-            q.add(i);
-            map.put(prefSum[i], q);
+        int[] pref = new int[nums.length + 1];
+        pref[0] = 0;
+        for (int i = 1; i < pref.length; i++) {
+            pref[i] = pref[i - 1] + nums[i - 1];
         }
 
-        int res = 0;
-        for (int i = 0; i < prefSum.length; i++) {
-            if (prefSum[i] == k) {
-                res++;
-            }
-            // prefSum[i] - needed = k
-            int needed = prefSum[i] -  k;
-            if (map.containsKey(needed)) {
-                List<Integer> indices = map.get(needed);
-                for (int index : indices) {
-                    if (index < i) {
-                        res++;
-                    } else {
-                        break;
-                    }
-                }
-            }
+        Map<Integer, Integer> freq = new HashMap<>();
+        int count = 0;
+        for (int i = 0; i < pref.length; i++) {
+            // curr - needed = k -> curr - k = needed
+            int needed = pref[i] - k;
+            int f = freq.getOrDefault(needed, 0);
+            count += f;
+
+            int newF = freq.getOrDefault(pref[i], 0) + 1;
+            freq.put(pref[i], newF);
         }
-        return res;
+        return count;
     }
 }
