@@ -6,23 +6,24 @@ class Solution {
             pq.add(interval);
         }
 
-        List<int[]> merged = new LinkedList<>();
         int[] prev = pq.poll();
+        List<int[]> ll = new LinkedList<>();
         while (!pq.isEmpty()) {
             int[] curr = pq.poll();
-            
-            if (prev[0] <= curr[0] && curr[0] <= prev[1]) {
+
+            boolean canMerge = curr[0] <= prev[1];
+            if (canMerge) {
                 prev[1] = Math.max(prev[1], curr[1]);
             } else {
-                merged.add(prev);
+                ll.add(prev);
                 prev = curr;
             }
         }
-        merged.add(prev);
+        ll.add(prev);
 
-        int[][] res = new int[merged.size()][2];
+        int[][] res = new int[ll.size()][2];
         int i = 0;
-        for (int[] interval : merged) {
+        for (int[] interval : ll) {
             res[i] = interval;
             i++;
         }
