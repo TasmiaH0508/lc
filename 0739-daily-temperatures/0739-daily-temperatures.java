@@ -1,29 +1,26 @@
 class Solution {
     public int[] dailyTemperatures(int[] temperatures) {
-        int[] res = new int[temperatures.length];
-        res[res.length - 1] = 0;
-
         Stack<int[]> s = new Stack<>();
-        int[] arr = new int[]{temperatures[temperatures.length - 1], temperatures.length - 1};
-        s.push(arr);
-
-        for (int i = res.length - 2; i >= 0; i--) {
-            boolean found = false;
-            int days = 0;
+        int[] res = new int[temperatures.length];
+        for (int i = temperatures.length - 1; i >= 0; i--) {
+            int daysToHigherTemp = 0;
             while (!s.empty()) {
-                int[] prev = s.peek();
-                if (prev[0] > temperatures[i]) {
-                    days = prev[1] - i;
+                int[] top = s.peek();
+                int topTemp = top[0];
+                int day = top[1];
+
+                if (topTemp > temperatures[i]) {
+                    daysToHigherTemp = day - i;
                     break;
                 } else {
                     s.pop();
                 }
             }
 
-            res[i] = days;
+            int[] arr = new int[]{temperatures[i], i};
+            s.push(arr);
 
-            int[] toAdd = new int[]{temperatures[i], i};
-            s.push(toAdd);
+            res[i] = daysToHigherTemp;
         }
         return res;
     }
