@@ -1,24 +1,30 @@
 class Solution {
     public boolean isPalindrome(String s) {
-        s = s.toLowerCase();
-        char[] arr = s.toCharArray();
-        Deque<Character> d = new ArrayDeque<>();
-        for (char c : arr) {
-            if ((48 <= c && c <= 57) ||(97 <= c && c <= 122)) {
-                d.addLast(c);
-            }
-        }
+        String ls = s.toLowerCase();
+        char[] arr = ls.toCharArray();
+        int low = 0;
+        int high = arr.length - 1;
 
-        while (d.size() > 0) {
-            char first = d.pollFirst();
-            char last = first;
-            if (d.size() > 0) {
-                last = d.pollLast();
+        while (low <= high) {
+            boolean isLowLetter = (arr[low] >= 97 && arr[low] <= 122);
+            boolean isLowNum = (arr[low] >= 48 && arr[low] <= 57);
+            if (!isLowLetter && !isLowNum) {
+                low++;
+                continue;
             }
 
-            if (first != last) {
+            boolean isHighLetter = arr[high] >= 97 && arr[high] <= 122;
+            boolean isHighNum =  (arr[high] >= 48 && arr[high] <= 57);
+            if (!isHighLetter && !isHighNum) {
+                high--;
+                continue;
+            }
+
+            if (arr[low] != arr[high]) {
                 return false;
             }
+            low++;
+            high--;
         }
         return true;
     }
