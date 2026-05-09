@@ -1,18 +1,21 @@
 class Solution {
     public void sortColors(int[] nums) {
-        Map<Integer, Integer> map = new HashMap<>();
-        for (int i : nums) {
-            int f = map.getOrDefault(i, 0) + 1;
-            map.put(i, f);
+        Map<Integer, Integer> freq = new HashMap<>();
+        for (int n : nums) {
+            int f = freq.getOrDefault(n, 0) + 1;
+            freq.put(n, f);
         }
 
-        int j = 0;
-        for (int i = 0; i < 3; i++) {
-            int f = map.getOrDefault(i, 0);
-            for (int k = 0; k < f; k++) {
-                nums[j] = i;
-                j++;
+        int ptr = 0;
+        int currVal = 0;
+        while (ptr < nums.length) {
+            int f = freq.getOrDefault(currVal, 0);
+            for (int i = 0; i < f; i++) {
+                nums[ptr + i] = currVal;
             }
+
+            currVal++;
+            ptr += f;
         }
     }
 }
