@@ -5,7 +5,7 @@ class Solution {
 
         int p1 = 0;
         int p2 = 0;
-        List<Integer> ll = new LinkedList<>();
+        List<Integer> ll = new ArrayList<>();
         while (p1 < nums1.length && p2 < nums2.length) {
             if (nums1[p1] == nums2[p2]) {
                 ll.add(nums1[p1]);
