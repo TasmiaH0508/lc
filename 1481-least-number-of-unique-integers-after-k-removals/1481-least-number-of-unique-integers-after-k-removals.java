@@ -1,30 +1,54 @@
 class Solution {
     public int findLeastNumOfUniqueInts(int[] arr, int k) {
-        Map<Integer, Integer> freq = new HashMap<>();
+        Map<Integer, Integer> freqMap = new HashMap<>();
         for (int a : arr) {
-            int f = freq.getOrDefault(a, 0) + 1;
-            freq.put(a, f);
+            int f = freqMap.getOrDefault(a, 0) + 1;
+            freqMap.put(a, f);
         }
 
-        Queue<Integer> pq = new PriorityQueue<>();
-        for (int key : freq.keySet()) {
-            int f = freq.get(key);
-            pq.add(f);
+        if (k == 0) {
+            return freqMap.size();
         }
 
-        int elemsRemoved = 0;
-        while (elemsRemoved < k && !pq.isEmpty()) {
-            int currF = pq.poll();
+        // maintain max heap of size k
+        Comparator<Integer> c = (a, b) -> Integer.compare(-a, -b);
+        Queue<Integer> pq = new PriorityQueue<>(c);
+        for (int key : freqMap.keySet()) {
+            int freq = freqMap.get(key);
 
-            int numElemsNeeded = k - elemsRemoved;
-            if (currF <= numElemsNeeded) {
-                elemsRemoved += currF;
+            if (pq.size() < k) {
+                pq.add(freq);
             } else {
-                elemsRemoved += numElemsNeeded;
-                currF -= numElemsNeeded;
-                pq.add(currF);
+                int maxFreq = pq.peek();
+
+                if (freq < maxFreq) {
+                    pq.poll();
+                    pq.add(freq);
+                }
             }
         }
-        return pq.size();
+
+        Queue<Integer> minPq = new PriorityQueue<>();
+        while (!pq.isEmpty()) {
+            int curr = pq.poll();
+            minPq.add(curr);
+        } 
+
+        int uniqueElemsRemovedFully = 0;
+        int totalElemsRemoved = 0;
+        while (totalElemsRemoved < k && !minPq.isEmpty()) {
+            int additionalElemsToRemove = k - totalElemsRemoved;
+
+            int currF = minPq.poll();
+            if (currF <= additionalElemsToRemove) {
+                uniqueElemsRemovedFully++;
+                totalElemsRemoved += currF;
+            } else {
+                totalElemsRemoved += additionalElemsToRemove;
+            }
+        }
+
+        int remUniqueElems = freqMap.size() - uniqueElemsRemovedFully;
+        return remUniqueElems;
     }
 }
