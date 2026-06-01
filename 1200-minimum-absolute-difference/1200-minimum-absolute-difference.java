@@ -3,8 +3,10 @@ class Solution {
         Arrays.sort(arr);
 
         Map<Integer, List<List<Integer>>> diffToElems = new HashMap<>();
+        int smallestDiff = Integer.MAX_VALUE;
         for (int i = 1; i < arr.length; i++) {
             int absDiff = arr[i] - arr[i - 1];
+            smallestDiff = Math.min(smallestDiff, absDiff);
 
             List<List<Integer>> ll = diffToElems.getOrDefault(absDiff, new LinkedList<>());
             List<Integer> curr = new LinkedList<>();
@@ -15,14 +17,8 @@ class Solution {
             diffToElems.put(absDiff, ll);
         }
 
-        Queue<Integer> pq = new PriorityQueue<>();
-        for (int key : diffToElems.keySet()) {
-            pq.add(key);
-        }
-
-        int smallestDiff = pq.poll();
         List<List<Integer>> res = diffToElems.get(smallestDiff);
-        
+
         return res;
     }
 }
