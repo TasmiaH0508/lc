@@ -1,63 +1,58 @@
+/**
+ * Definition for a binary tree node.
+ * public class TreeNode {
+ *     int val;
+ *     TreeNode left;
+ *     TreeNode right;
+ *     TreeNode() {}
+ *     TreeNode(int val) { this.val = val; }
+ *     TreeNode(int val, TreeNode left, TreeNode right) {
+ *         this.val = val;
+ *         this.left = left;
+ *         this.right = right;
+ *     }
+ * }
+ */
 class Solution {
+
     public TreeNode createBinaryTree(int[][] descriptions) {
-        Set<Integer> children = new HashSet<>();
-        // This hashmap can be used since all the treenode values are unique
-        Map<Integer, TreeNode> valToTreeNode = new HashMap<>();
-        for (int[] desc : descriptions) {
-            int parentVal = desc[0];
-            int childVal = desc[1];
-            int side = desc[2];
-            if (!children.contains(childVal)) {
-                // As soon as a node becomes a child of another node, 
-                // just add the node to the children hashset.
-                children.add(childVal);
-            }
-            if (valToTreeNode.containsKey(parentVal)) {
-                TreeNode tree = valToTreeNode.get(parentVal);
-                if (valToTreeNode.containsKey(childVal)) {
-                    TreeNode subtree = valToTreeNode.get(childVal);
-                    if (side == 0) {
-                        tree.right = subtree;
-                    } else {
-                        tree.left = subtree;
-                    }
-                } else {
-                    TreeNode subtree = new TreeNode(childVal);
-                    valToTreeNode.put(childVal, subtree);
-                    if (side == 0) {
-                        tree.right = subtree;
-                    } else {
-                        tree.left = subtree;
-                    }
-                }
+        Map<Integer, TreeNode> valToNode = new HashMap<>();
+        for (int[] d : descriptions) {
+            int val = d[0];
+            TreeNode t = new TreeNode(val);
+            valToNode.put(val, t);
+
+            int childVal = d[1];
+            TreeNode tChild = new TreeNode(childVal);
+            valToNode.put(childVal, tChild);
+        }
+
+        Set<Integer> childrenVals = new HashSet<>();
+        childrenVals.addAll(valToNode.keySet());
+
+        for (int[] d : descriptions) {
+            int currNodeVal = d[0];
+            int childNodeVal = d[1];
+            boolean isLeft = d[2] == 1;
+
+            childrenVals.remove(childNodeVal);
+
+            TreeNode currNode = valToNode.get(currNodeVal);
+            TreeNode childNode = valToNode.get(childNodeVal);
+
+            if (isLeft) {
+                currNode.left = childNode;
             } else {
-                TreeNode tree = new TreeNode(parentVal);
-                if (valToTreeNode.containsKey(childVal)) {
-                    TreeNode subtree = valToTreeNode.get(childVal);
-                    if (side == 0) {
-                        tree.right = subtree;
-                    } else {
-                        tree.left = subtree;
-                    }
-                } else {
-                    TreeNode subtree = new TreeNode(childVal);
-                    valToTreeNode.put(childVal, subtree);
-                    if (side == 0) {
-                        tree.right = subtree;
-                    } else {
-                        tree.left = subtree;
-                    }
-                }
-                valToTreeNode.put(parentVal, tree);
+                currNode.right = childNode;
             }
         }
-        for (Integer i : valToTreeNode.keySet()) {
-            if (!children.contains(i)) {
-                System.out.println("THe value not contained in children is" + i);
-                System.out.println("Since this node is not the child of any other node, this is the root node.");
-                return valToTreeNode.get(i);
-            }
+
+        int root = 0;
+        for (int key : childrenVals) {
+            root = key;
         }
-        return null;
+
+        return valToNode.get(root);
     }
+
 }
