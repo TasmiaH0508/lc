@@ -1,13 +1,4 @@
 class Solution {
-    /**
-    for the parenthesis problem, we need to know which bracket closes which bracket
-
-    for brackets, the closing bracket or the innermost have to be the closest -> we look at stack
-
-    to decide if the brackets are the outermost, we can just check the size of the stack
-
-    we can use a string builder as well...
-    */
     public String removeOuterParentheses(String s) {
         char[] arr = s.toCharArray();
         Stack<Integer> stack = new Stack<>();
